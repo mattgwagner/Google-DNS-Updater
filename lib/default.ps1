@@ -36,6 +36,10 @@ Task Package -depends Build {
 
 Task Configure {
 	notepad "$SolutionRoot\Google-DNS-Updater.Service\bin\$Configuration\Google-DNS-Updater.Service.exe.config"
+
+	Write-Host "Press any key to continue ... "
+
+	$x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }
 
 Task Install-Service -depends Build {
@@ -63,21 +67,7 @@ Task Install-MSBuild {
 	}
 }
 
-Task Install-Win8SDK {
-    if(!(Test-Path "${env:ProgramFiles(x86)}\Windows Kits\8.1\bin\x64\signtool.exe"))
-	{ 
-		cinst windows-sdk-8.1 
-	}
-}
-
-Task Install-WebAppTargets {
-    if(!(Test-Path "$env:ChocolateyInstall\lib\MSBuild.Microsoft.VisualStudio.Web.targets.12.0.4\tools\VSToolsPath\WebApplications\Microsoft.WebApplication.targets"))
-	{ 
-        cinst MSBuild.Microsoft.VisualStudio.Web.targets -source http://packages.nuget.org/v1/FeedService.svc/ -version '12.0.4'
-    }
-}
-
-Task Install-BuildTools -depends Install-MSBuild, Install-Win8SDK, Install-WebAppTargets
+Task Install-BuildTools -depends Install-MSBuild
 
 # Borrowed from Luis Rocha's Blog (http://www.luisrocha.net/2009/11/setting-assembly-version-with-windows.html)
 Task Update-AssemblyInfoFiles {
