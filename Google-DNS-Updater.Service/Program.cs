@@ -9,13 +9,13 @@ namespace Google_DNS_Updater.Service
 {
     internal class Program
     {
-        public static String Hostname = ConfigurationManager.AppSettings["Hostname"];
+        public static String Hostname { get { return ConfigurationManager.AppSettings["Hostname"]; } }
 
-        public static String Username = ConfigurationManager.AppSettings["Username"];
+        public static String Username { get { return ConfigurationManager.AppSettings["Username"]; } }
 
-        public static String Password = ConfigurationManager.AppSettings["Password"];
+        public static String Password { get { return ConfigurationManager.AppSettings["Password"]; } }
 
-        private static int UpdateIntervalInMinutes = 720;
+        private static int UpdateIntervalInMinutes { get { return int.Parse(ConfigurationManager.AppSettings["UpdateIntervalInMinutes"] ?? "720"); } }
 
         private static void Main(string[] args)
         {
@@ -23,8 +23,8 @@ namespace Google_DNS_Updater.Service
             {
                 x.Service<TaskService>();
 
-                x.SetDescription("Google Dynamic DNS Updater");
-                x.SetDisplayName("Google - Dynamic DNS Updater");
+                // x.SetDescription("Google Dynamic DNS Updater");
+                x.SetDisplayName("Google-Dynamic-DNS-Updater");
                 x.SetServiceName("Google-Dynamic-DNS-Updater");
 
                 x.RunAsLocalSystem();

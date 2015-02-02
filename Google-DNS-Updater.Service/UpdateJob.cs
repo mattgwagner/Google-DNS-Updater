@@ -1,7 +1,8 @@
 ﻿using Common.Logging;
 using Quartz;
 using System;
-using System.Net.Http;
+using System.IO;
+using System.Net;
 
 namespace Google_DNS_Updater.Service
 {
@@ -9,21 +10,37 @@ namespace Google_DNS_Updater.Service
     {
         private readonly ILog Log = LogManager.GetLogger<UpdateJob>();
 
-        public async void Execute(IJobExecutionContext context)
+        public void Execute(IJobExecutionContext context)
         {
-            Log.InfoFormat("Running update for hostname {0}", Program.Hostname);
-
-            String url = String.Format("https://{0}:{1}@domains.google.com/nic/update?hostname={2}",
-                Program.Username,
-                Program.Password,
-                Program.Hostname);
-
-            using (HttpClient client = new HttpClient())
+            try
             {
-                await client.GetAsync(url);
-            }
+                Log.InfoFormat("Running update for hostname {0}", Program.Hostname);
 
-            Log.Info("Update completed.");
+                var uri = new UriBuilder
+                {
+                    Scheme = "https",
+                    Host = "domains.google.com",
+                    Path = "nic/update",
+                    Query = "hostname=" + Program.Hostname
+                };
+
+                var request = (HttpWebRequest)HttpWebRequest.Create(uri.Uri);
+
+                request.Credentials = new NetworkCredential(Program.Username, Program.Password);
+
+                request.UserAgent = "DnsUpdateClient";
+
+                WebResponse response = request.GetResponse();
+
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    Log.InfoFormat("Update completed, {0}", reader.ReadToEnd());
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorFormat("Error updating record", ex);
+            }
         }
     }
 }
