@@ -30,6 +30,28 @@ Task Clean {
 	exec { . $MSBuild $SolutionFile /t:Clean /v:quiet }
 }
 
+Task Package -depends Build {
+	## TODO
+}
+
+Task Configure {
+	notepad "$SolutionRoot\Google-DNS-Updater.Service\bin\$Configuration\Google-DNS-Updater.Service.exe.config"
+}
+
+Task Install-Service -depends Build {
+	exec { . "$SolutionRoot\Google-DNS-Updater.Service\bin\$Configuration\Google-DNS-Updater.Service.exe" install }
+}
+
+Task Start-Service {
+	exec { . "$SolutionRoot\Google-DNS-Updater.Service\bin\$Configuration\Google-DNS-Updater.Service.exe" start }
+}
+
+Task Uninstall-Service -depends Build {
+	exec { . "$SolutionRoot\Google-DNS-Updater.Service\bin\$Configuration\Google-DNS-Updater.Service.exe" uninstall }
+}
+
+Task Start -depends Install-Service, Configure, Start-Service
+
 Task Restore-Packages -depends Install-BuildTools {
 	exec { . $NuGet restore $SolutionFile }
 }
