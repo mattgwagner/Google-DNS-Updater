@@ -1,6 +1,19 @@
 $PSake.use_exit_on_error = $true
 
-if(!$Configuration) { $Configuration = "Debug" }
+## This comes from the build server iteration
+if(!$BuildNumber) { $BuildNumber = $env:APPVEYOR_BUILD_NUMBER }
+if(!$BuildNumber) { $BuildNumber = "0.1"}
+
+## This comes from the Hg commit hash used to build
+if(!$CommitHash) { $CommitHash = $env:APPVEYOR_REPO_COMMIT }
+if(!$CommitHash) { $CommitHash = "local-build" }
+
+## The build configuration, i.e. Debug/Release
+if(!$Configuration) { $Configuration = $env:Configuration }
+if(!$Configuration) { $Configuration = "Release" }
+
+if(!$Version) { $Version = $env:APPVEYOR_BUILD_VERSION }
+if(!$Version) { $Version = "0.1.$BuildNumber" }
 
 $Here = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 
@@ -30,8 +43,12 @@ Task Clean {
 	exec { . $MSBuild $SolutionFile /t:Clean /v:quiet }
 }
 
-Task Package -depends Build {
-	## TODO
+Task Package -depends Restore-Packages, Update-AssemblyInfoFiles {
+	exec { . $MSBuild $SolutionFile /v:minimal /p:Configuration=$Configuration /p:RunOctoPack="true" /p:OctoPackPackageVersion="$Version" }
+
+	## /p:OctoPackAppendToPackageId="Local/Staging/etc"
+	## /p:OctoPackPublishPackagesToTeamCity="False"
+	## /p:OctoPackPublishApiKey="api-key-here"
 }
 
 Task Configure {

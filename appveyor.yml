@@ -15,7 +15,6 @@ shallow_clone: true
 #       build configuration       #
 #---------------------------------#
 
-
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform: Any CPU
 
@@ -24,7 +23,7 @@ configuration: Release
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
-  - cmd: .\build.bat
+  - cmd: .\build.bat Package
 
 assembly_info:
   patch: true
