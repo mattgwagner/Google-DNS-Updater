@@ -15,14 +15,16 @@ shallow_clone: true
 #       build configuration       #
 #---------------------------------#
 
+
 # build platform, i.e. x86, x64, Any CPU. This setting is optional.
 platform: Any CPU
 
 # build Configuration, i.e. Debug, Release, etc.
 configuration: Release
 
-build:
-  project: Google-DNS-Updater.sln
+# to run your custom scripts instead of automatic MSBuild
+build_script:
+	build.bat
 
 assembly_info:
   patch: true
