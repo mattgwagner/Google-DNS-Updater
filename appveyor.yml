@@ -11,19 +11,8 @@ version: 0.1.{build}
 
 shallow_clone: true
 
-#---------------------------------#
-#       build configuration       #
-#---------------------------------#
-
-# build platform, i.e. x86, x64, Any CPU. This setting is optional.
-platform: Any CPU
-
-# build Configuration, i.e. Debug, Release, etc.
-configuration: Release
-
-# to run your custom scripts instead of automatic MSBuild
-build_script:
-  - cmd: .\build.bat Package
+build:
+  project: Dreamhost_DNS_Updater.sln
 
 assembly_info:
   patch: true
@@ -31,6 +20,3 @@ assembly_info:
   assembly_version: "{version}"
   assembly_file_version: "{version}"
   assembly_informational_version: "{version}"
-
-artifacts:
-  - path: '**\Google-DNS-Updater.Service.*.nupkg'
