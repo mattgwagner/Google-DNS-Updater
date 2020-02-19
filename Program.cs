@@ -19,6 +19,7 @@ namespace Google_DNS_Updater
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
-                });
+                })
+                .UseWindowsService();
     }
 }

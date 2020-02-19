@@ -1,0 +1,1 @@
+sc create Google-DNS-Updater BinPath=C:\full\path\to\publish\dir\WindowsServiceExample.exe
