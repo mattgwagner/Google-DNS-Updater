@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "Google_DNS_Updater": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
